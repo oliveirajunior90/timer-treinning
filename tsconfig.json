@@ -4,7 +4,14 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@components/*": ["src/components/*"]
+      "@types/*": ["src/types/*"],
+      "@components/*": ["src/components/*"],
+        "@screens/*": ["src/screens/*"],
+        "@assets/*": ["src/assets/*"],
+      "@lib/*": ["src/lib/*"],
+        "@hooks/*": ["src/hooks/*"],
+        "@utils/*": ["src/utils/*"],
+      "@styles/*": ["src/styles/*"],
     }
   },
   "exclude": ["node_modules"]

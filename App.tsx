@@ -1,28 +1,28 @@
 import React from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
-import ExerciseItem from "./src/components/exercise/exercise-item.tsx";
-import {Exercise} from "@/types/exercise.ts";
+import ExerciseItem from '@components/exercise/exercise-item.tsx';
+import {Exercise} from '@/types/exercise';
 
 const ExerciseList: React.FC = () => {
   const exercises: Exercise[] = [
-    { id: '1', name: 'Supino Reto', quantity: 2, time: {execution: 3, rest: 3} },
+    {id: '1', name: 'Supino Reto', quantity: 2, time: {execution: 3, rest: 3}},
   ];
 
   return (
-      <View style={styles.container}>
+    <View style={styles.container}>
       <FlatList
-          data={exercises}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <ExerciseItem exercise={item} />}
-          contentContainerStyle={styles.listContainer}
+        data={exercises}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => <ExerciseItem exercise={item} />}
+        contentContainerStyle={styles.listContainer}
       />
-      </View>
-  )
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex:1,
+    flex: 1,
     backgroundColor: '#1c1c1c',
   },
   listContainer: {
