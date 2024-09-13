@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import Timer from "../timer";
+import colors from "../../styles/colors";
+import DefaultTimer from "../timer/DefaultTimer";
 import { Exercise } from "@/types/exercise";
+import TotalTimer from "../timer/TotalTimer.tsx";
 
 interface ExerciseItemProps {
     exercise: Exercise;
@@ -13,6 +15,9 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const [isExecutionComplete, setIsExecutionComplete] = useState<boolean>(false);
     const [resetTime, setResetTime] = useState<boolean>(false);
+    const [resetTotal, setResetTotal] = useState<boolean>(false);
+
+    const totalTime = (exercise.time.execution + exercise.time.rest) * exercise.quantity;
 
     const toggleTimer = () => {
         if (quantity > 0) {
@@ -28,33 +33,22 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
         setQuantity(exercise.quantity);
         setIsExecutionComplete(false)
         setResetTime(true);
+        setResetTotal(true);
         setTimeout(() => {
             setResetTime(false);
             setIsRunning(false);
+            setResetTotal(false);
         }, 100);
     };
 
-    // const handleRestComplete = () => {
-    //     if (quantity > 0) {
-    //         decrementQuantity();
-    //         setResetTime(true);
-    //         setTimeout(() => {
-    //             setIsExecutionComplete(false);
-    //             setResetTime(false);
-    //         }, 100);
-    //         return;
-    //     }
-    // };
 
     const handleRestComplete = () => {
         if (quantity > 0) {
             decrementQuantity();
             if (quantity > 1) {
                 setResetTime(true);
-                setTimeout(() => {
-                    setIsExecutionComplete(false);
-                    setResetTime(false);
-                }, 100);
+                setIsExecutionComplete(false);
+                setResetTime(false);
             }
         }
     };
@@ -62,13 +56,6 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
     const decrementQuantity = () => {
         setQuantity((prevQuantity) => Math.max(prevQuantity - 1, 0));
     };
-
-    // useEffect(() => {
-    //     if (quantity === 0) {
-    //         setIsRunning(false);
-    //         setIsExecutionComplete(true);
-    //     }
-    // }, [resetTime, isExecutionComplete]);
 
     useEffect(() => {
         if (quantity === 0) {
@@ -80,11 +67,13 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
     return (
         <View style={styles.exerciseContainer}>
             <Text style={styles.exerciseTitle}>{exercise.name}</Text>
-            {quantity > 0 ? <Text style={styles.text}>Quantidade {quantity}</Text> : <Text style={styles.text}>Exercício finalizado</Text>}
+            {quantity > 0 ? <Text style={styles.text}>Quantidade {quantity}</Text> : <Text style={styles.warning}>Exercício finalizado</Text>}
 
-            <Timer name="executar" time={exercise.time.execution} isRunning={isRunning && !isExecutionComplete} onComplete={handleExecutionComplete} resetTime={resetTime} />
+            <TotalTimer time={totalTime} isRunning={isRunning} resetTime={resetTotal}/>
 
-            <Timer name="descansar" time={exercise.time.rest} isRunning={isRunning && isExecutionComplete} onComplete={handleRestComplete} resetTime={resetTime} />
+            <DefaultTimer name="executar" time={exercise.time.execution} isRunning={isRunning && !isExecutionComplete} onComplete={handleExecutionComplete} resetTime={resetTime} style={styles.timerDefault} />
+
+            <DefaultTimer name="descansar" time={exercise.time.rest} isRunning={isRunning && isExecutionComplete} onComplete={handleRestComplete} resetTime={resetTime} style={styles.timerDefault} />
 
             <View style={styles.buttonsContainer}>
                 <View>
@@ -92,9 +81,11 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise }) => {
                         <Text style={styles.restartText}>Reiniciar</Text>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={toggleTimer}>
-                    <Icon name={isRunning ? 'pause' : 'play'} size={60} color="#000" style={styles.icon} />
-                </TouchableOpacity>
+                <View>
+                    <TouchableOpacity onPress={toggleTimer}>
+                        <Icon name={isRunning ? 'pause' : 'play'} size={60} color="#000" style={styles.icon} />
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );
@@ -125,13 +116,13 @@ const styles = StyleSheet.create({
     restart: {
         borderWidth: 1,
         borderRadius: 15,
-        borderColor: '#d3fc6d',
+        borderColor: colors.primary,
         borderStyle: 'solid',
         paddingHorizontal: 30,
         paddingVertical: 10,
     },
     restartText: {
-        color: '#d3fc6d',
+        color: colors.primary,
         fontSize: 20,
         fontWeight: '200',
         textAlign: 'center',
@@ -150,11 +141,24 @@ const styles = StyleSheet.create({
         fontSize: 22,
         marginBottom: 10,
         textAlign: 'center',
-        color: '#fff',
+        color: colors.white,
+    },
+    warning: {
+        fontSize: 22,
+        textAlign: 'center',
+        color: colors.warning,
     },
     icon: {
         marginTop: 40,
-        color: '#d3fc6d',
+        color: colors.primary,
+    },
+    totalTimer: {
+      color: colors.warning,
+        fontSize:15,
+    },
+    timerDefault: {
+        fontSize: 40,
+
     }
 });
 

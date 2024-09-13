@@ -5,9 +5,7 @@ import {Exercise} from "@/types/exercise.ts";
 
 const ExerciseList: React.FC = () => {
   const exercises: Exercise[] = [
-    { id: '1', name: 'Supino Reto', quantity: 2, time: {execution: 2, rest: 2} },
-    // { id: '2', name: 'Rosca Alternada', quantity: 3, time: {execution: 10, rest: 5} },
-    // { id: '3', name: 'Abdominal Infra', quantity: 5, time: {execution: 10, rest: 5} },
+    { id: '1', name: 'Supino Reto', quantity: 2, time: {execution: 3, rest: 3} },
   ];
 
   return (
